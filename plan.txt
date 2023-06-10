@@ -1,0 +1,136 @@
+In this project, we will be creating a bank management system using C++.
+
+1.Creating data structures for bank management system
+2.Add Encryption and Decryption to the data structures
+3.Add a Terminal User Interface to the data structures
+4.Integrate file handling to the data structures and record all the data to different files
+    - 1. Account Details -> accs.txt
+    - 2. Transaction Details -> txns.txt
+5.Add a login system to the data structures
+6.Add a password reset system to the data structures
+7.Add a transaction system to the data structures
+--Additional features, if time permits--
+8.Add a loan interest repayment system to the data structures
+
+-------Functions-------
+1. Read    file
+2. Write   file
+3. Encrypt
+4. Decrypt
+5. Random digit generator (for account number and transaction number)
+
+-------Classes---------
+1. Account
+    - 1. Account Number
+    - 2. Account Type -> Savings || Current || Fixed Deposit || Recurring Deposit
+    - 3. Account Balance
+    - 4. Account Status -> Active || Inactive
+    - 5. Account Interest
+    - 6. Account Transactions -> List of Transaction Numbers
+    - 7. Account Holder Info -> Struct -> Name, Address, Phone Number, Email ID
+    ------------Functions-----------
+    - 1. Deposit
+    - 2. Withdraw
+    - 3. Transfer
+    - 4. Get Account Balance
+    - 5. Get Account Holder Info
+    - 6. Get Account Transactions (limit default=10)
+    - 7. Get Account Info -> Number, Type, Balance, Status, Interest
+    - 8. Load Account
+    
+2. Transaction, inherits Account
+    - 1. Transaction Number
+    - 2. Transaction Type -> NEFT, IMPS, UPI, RTGS
+    - 3. Transaction Amount
+    - 4. Transaction Date
+    - 5. Transaction Time
+    - 6. Transaction Status -> Success, Failure
+    - 7. Transaction Sender Account Number 
+    - 8. Transaction Receiver Account Number
+    ------------Functions-----------
+    - 1. Get Transaction Info -> Number, Type, Amount, Date, Time, Status, Sender Account Number, Receiver Account Number
+    - 2. Get Transaction Status -> Success, Failure
+    - 3. Get Transaction Amount
+    - 4. Get Transaction Date and Time
+    - 5. Get Transaction Type -> NEFT, IMPS, UPI, RTGS
+    - 6. Get Transaction Account Details -> Sender Account Number, Receiver Account Number
+
+-------Data Structures-------
+1. Account -> Map -> Account Number -> Account
+2. Transaction -> Map -> Transaction Number -> Transaction
+
+-------Files-------
+1. accs.txt -> stores all account information
+2. txns.txt -> stores all transaction information
+
+-------Encryption-------
+1. XOR Encryption
+2. XOR Decryption
+
+-------Terminal User Interface-------
+1. Login/Signup
+2. Account Details
+3. Transaction Details
+    ------query by------
+    -1. Own account 
+    -2. Transaction Number
+    -3. Date 
+
+4. Deposit
+5. Withdraw
+6. Transfer
+7. Change Password
+
+-------Login System-------
+1. Login
+    -1. User logs in
+    -2. Find details from file 
+    -3. Load details into data structures
+2. Signup
+    -1. User signs up
+    -2. Create new account
+    -3. Add details to file
+    -4. Load details into data structures
+
+3. Forgot Password
+    -1. User enters username
+    -2. User enters security question answer
+    -3. User enters new password
+    -4. Update password in file
+
+-------Password Reset System-------
+1. Security Question
+    -1. Stored in ques.txt -> Question, Answer, Account Number
+
+-------Variable Names-------
+1. Account Number -> acc_no -> unique int 
+2. Account Type -> acc_type -> string -> Savings || Current || Fixed Deposit || Recurring Deposit
+3. Account Balance -> acc_bal -> float
+4. Account Status -> acc_status -> string -> Active || Inactive
+5. Account Interest -> acc_interest -> float
+6. Account Transactions -> acc_txns -> vector -> List of Transaction Numbers
+7. Account Holder Info -> acc_info -> Struct -> Name, Address, Phone Number, Email ID
+    -1. Name -> acc_info.name -> string
+    -2. Address -> acc_info.address -> string
+    -3. Phone Number -> acc_info.phone -> string
+    -4. Email ID -> acc_info.email -> string
+8. Transaction Number -> txn_no -> unique int
+9. Transaction Type -> txn_type -> string -> NEFT, IMPS, UPI, RTGS
+10. Transaction Amount -> txn_amt -> float
+11. Transaction Date -> txn_date -> string
+12. Transaction Time -> txn_time -> string
+13. Transaction Status -> txn_status -> string -> Success, Failure
+14. Transaction Sender Account Number -> txn_sender -> int
+15. Transaction Receiver Account Number -> txn_receiver -> int
+16. Transaction Account Details -> txn_acc -> Struct -> Sender Account Number, Receiver Account Number
+    -1. Sender Account Number -> txn_acc.sender -> int
+    -2. Receiver Account Number -> txn_acc.receiver -> int
+17. Transaction Info -> txn_info -> Struct -> Number, Type, Amount, Date, Time, Status, Sender Account Number, Receiver Account Number
+    -1. Number -> txn_info.number -> int
+    -2. Type -> txn_info.type -> string
+    -3. Amount -> txn_info.amount -> float
+    -4. Date -> txn_info.date -> string
+    -5. Time -> txn_info.time -> string
+    -6. Status -> txn_info.status -> string
+    -7. Sender Account Number -> txn_info.sender -> int
+    -8. Receiver Account Number -> txn_info.receiver -> int
