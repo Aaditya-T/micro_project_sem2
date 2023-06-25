@@ -24,7 +24,7 @@ int getAccountLineNo(long int);
 int getTransactionLineNo(long int);
 long randomDigits();
 
-void loadAllAccounts();
+void loadAllAccounts(bool load = false);
 void loadAllTransactions(bool load = false);
 
 // global vars
@@ -37,12 +37,12 @@ const int encryptKey = 5;
 class FileOperations
 {
     public:
-    string readFile(string filename);
-    string getLineContent(string, string, int);
-    void writeFileAppend(string, string);
-    void writeFileOverwriteLine(string, string, int);
-    string encrypt(string);
-    string decrypt(string);
+        string readFile(string filename);
+        string getLineContent(string, string, int);
+        void writeFileAppend(string, string);
+        void writeFileOverwriteLine(string, string, int);
+        string encrypt(string);
+        string decrypt(string);
 };
 
 FileOperations fileOps;
@@ -82,10 +82,10 @@ public:
     {
         // generate account number
         acc_no = randomDigits();
-        cout << "Account number: " << acc_no << endl;
-        cout << "Enter account type[1 for savings, 2 for current]: ";
+        std::cout << "Account number: " << acc_no << endl;
+        std::cout << "Enter account type[1 for savings, 2 for current]: ";
         int type;
-        cin >> type;
+        std::cin >> type;
         if (type == 1)
         {
             acc_type = "savings";
@@ -98,21 +98,21 @@ public:
         }
         else
         {
-            cout << "Invalid account type" << endl;
+            std::cout << "Invalid account type" << endl;
             return;
         }
 
-        cout << "Enter account holder name: ";
-        cin.ignore();
-        getline(cin, holder.name);
-        cout << "Enter account holder address: ";
-        getline(cin, holder.address);
-        cout << "Enter account holder phone number: ";
-        getline(cin, holder.phone);
-        cout << "Enter account holder email: ";
-        getline(cin, holder.email);
-        cout << "Enter initial deposit amount: ";
-        cin >> balance;
+        std::cout << "Enter account holder name: ";
+        std::cin.ignore();
+        getline(std::cin, holder.name);
+        std::cout << "Enter account holder address: ";
+        getline(std::cin, holder.address);
+        std::cout << "Enter account holder phone number: ";
+        getline(std::cin, holder.phone);
+        std::cout << "Enter account holder email: ";
+        getline(std::cin, holder.email);
+        std::cout << "Enter initial deposit amount: ";
+        std::cin >> balance;
         acc_status = "active";
 
         // write to file
@@ -124,7 +124,7 @@ public:
     {
         if (acc_status == "inactive")
         {
-            cout << "Account is inactive" << endl;
+            std::cout << "Account is inactive" << endl;
             return -1;
         }
         return acc_no;
@@ -137,7 +137,7 @@ public:
 
     void display_account()
     {
-        system("cls");
+        system("clear");
         // use iomanip to format the output in a nice tabular form with proper headings
         if (holder.address.length() > 35)
         {
@@ -148,8 +148,14 @@ public:
         {
             holder.email = holder.email.substr(0, 15) + "...";
         }
-        cout << left << setw(15) << "Account No." << setw(15) << "Account Type" << setw(15) << "Account Status" << setw(15) << "Balance" << setw(15) << "Interest Rate" << setw(20) << "Name" << setw(35) << "Address" << setw(15) << "Phone" << setw(20) << "Email" << endl;
-        cout << left << setw(15) << acc_no << setw(15) << acc_type << setw(15) << acc_status << setw(15) << balance << setw(15) << interest_rate << setw(20) << holder.name << setw(35) << holder.address << setw(15) << holder.phone << setw(20) << holder.email << endl;
+        int address_len = holder.address.length();
+        std::cout << left << setw(15) << "Account No." << setw(15) << "Account Type" << setw(15) << "Account Status" << setw(15) << "Balance" << setw(15) << "Interest Rate" << setw(20) << "Name" << setw(address_len + 1) << "Address" << setw(15) << "Phone" << setw(20) << "Email" << endl;
+        std::cout << left << setw(15) << acc_no << setw(15) << acc_type << setw(15) << acc_status << setw(15) << balance << setw(15) << interest_rate << setw(20) << holder.name << setw(address_len + 1) << holder.address << setw(15) << holder.phone << setw(20) << holder.email << endl;
+        
+        //dont continue till user presses enter
+        std::cout << "Press enter to continue...";
+        std::cin.ignore();
+        std::cin.get();
     }
 
     void credit(float am)
@@ -190,16 +196,16 @@ public:
 
     void edit_account()
     {
-        system("cls");
-        cout << "Enter new account holder name: ";
-        cin.ignore();
-        getline(cin, holder.name);
-        cout << "Enter new account holder address: ";
-        getline(cin, holder.address);
-        cout << "Enter new account holder phone number: ";
-        getline(cin, holder.phone);
-        cout << "Enter new account holder email: ";
-        getline(cin, holder.email);
+        system("clear");
+        std::cout << "Enter new account holder name: ";
+        std::cin.ignore();
+        getline(std::cin, holder.name);
+        std::cout << "Enter new account holder address: ";
+        getline(std::cin, holder.address);
+        std::cout << "Enter new account holder phone number: ";
+        getline(std::cin, holder.phone);
+        std::cout << "Enter new account holder email: ";
+        getline(std::cin, holder.email);
 
         // save account to file
         string contents = to_string(acc_no) + "," + acc_type + "," + acc_status + "," + to_string(balance) + "," + to_string(interest_rate) + "," + holder.name + "," + holder.address + "," + holder.phone + "," + holder.email;
@@ -230,6 +236,7 @@ protected:
     long int receiver_acc_no;
 
 public:
+
     Transaction()
     {
         txn_no = 0;
@@ -255,34 +262,39 @@ public:
         getline(ss, txn_status, ',');
         getline(ss, item, ',');
         // sender_acc_no = stoi(item);
-        if (item == "null")
-        {
-        }
+        if (item == "null" || item == "")
+        {}
         else
         {
             sender_acc_no = stoi(item);
         }
         getline(ss, item, ',');
-        receiver_acc_no = stoi(item);
+        // receiver_acc_no = stoi(item);
+        if (item == "null" || item == "")
+        {}
+        else
+        {
+            receiver_acc_no = stoi(item);
+        }
     }
 
-    void display_txn(bool cls = true)
+    void display_txn(bool clear = true)
     {
-        // system("cls");
-        if (cls)
+        // system("clear");
+        if (clear)
         {
-            system("cls");
+            system("clear");
         }
         // use iomanip to format the output in a nice tabular form with proper headings
-        cout << left << setw(20) << "Transaction No." << setw(20) << "Transaction Type" << setw(20) << "Amount" << setw(20) << "Date" << setw(20) << "Time" << setw(20) << "Status" << setw(20) << "Sender Acc No." << setw(20) << "Receiver Acc No." << endl;
-        cout << left << setw(20) << txn_no << setw(20) << txn_type << setw(20) << amount << setw(20) << txn_date << setw(20) << txn_time << setw(20) << txn_status << setw(20) << sender_acc_no << setw(20) << receiver_acc_no << endl;
+        std::cout << left << setw(20) << "Transaction No." << setw(20) << "Transaction Type" << setw(20) << "Amount" << setw(20) << "Date" << setw(20) << "Time" << setw(20) << "Status" << setw(20) << "Sender Acc No." << setw(20) << "Receiver Acc No." << endl;
+        std::cout << left << setw(20) << txn_no << setw(20) << txn_type << setw(20) << amount << setw(20) << txn_date << setw(20) << txn_time << setw(20) << txn_status << setw(20) << sender_acc_no << setw(20) << receiver_acc_no << endl;
     }
 
     void transaction(Account sender, Account receiver, float amount)
     {
         if (sender.get_balance() < amount)
         {
-            cout << "Insufficient balance" << endl;
+            std::cout << "Insufficient balance" << endl;
             return;
         }
 
@@ -294,7 +306,7 @@ public:
 
         sender.debit(amount);
         receiver.credit(amount);
-        cout << "Transaction successful" << endl;
+        std::cout << "Transaction successful" << endl;
 
         // write to file
         string contents = to_string(txn_no) + "," + "transfer" + "," + to_string(amount) + "," + txn_date + "," + txn_time + "," + "success" + "," + to_string(sender_acc_no) + "," + to_string(receiver_acc_no);
@@ -306,24 +318,32 @@ public:
         txn_no = randomDigits();
         if (root.get_balance() < amount)
         {
-            cout << "Insufficient balance" << endl;
+            std::cout << "Insufficient balance" << endl;
             return;
         }
 
+        txn_date = get_current_date();
+        txn_time = get_current_time();
+
         root.debit(amount);
-        cout << "Withdrawal successful" << endl;
+        std::cout << "Withdrawal successful" << endl;
         sender_acc_no = root.get_acc_no();
 
         // write to file
         string contents = to_string(txn_no) + "," + "withdrawal" + "," + to_string(amount) + "," + txn_date + "," + txn_time + "," + "success" + "," + to_string(sender_acc_no) + "," + "null";
         fileOps.writeFileAppend(TXNS_FILE, contents);
+
+        //dont continue until user presses enter
+        std::cout << "Press enter to continue" << endl;
+        std::cin.ignore(); 
+        std::cin.get();
     }
 
     void deposit(Account root, float amount)
     {
         txn_no = randomDigits();
         root.credit(amount);
-        cout << "Deposit successful" << endl;
+        std::cout << "Deposit successful" << endl;
         txn_date = get_current_date();
         txn_time = get_current_time();
         receiver_acc_no = root.get_acc_no();
@@ -331,6 +351,12 @@ public:
         // write to file
         string contents = to_string(txn_no) + "," + "deposit" + "," + to_string(amount) + "," + txn_date + "," + txn_time + "," + "success" + "," + "null" + "," + to_string(receiver_acc_no);
         fileOps.writeFileAppend(TXNS_FILE, contents);
+        
+        //dont continue until user presses enter
+        std::cout << "Press enter to continue" << endl;
+        std::cin.ignore(); //
+        std::cin.get();
+
     }
 
     long int get_sender_acc_no()
@@ -347,6 +373,7 @@ public:
     {
         return amount;
     }
+
 };
 
 // functions
@@ -358,7 +385,7 @@ string FileOperations::readFile(string filename)
     fin.open(filename);
     if (!fin.is_open())
     {
-        cout << "Could not open file" << endl;
+        std::cout << "Could not open file" << endl;
         return "";
     }
     while (getline(fin, line))
@@ -378,7 +405,7 @@ string FileOperations::getLineContent(string filename, string contents, int line
     {
         if (line > getAccountsLen())
         {
-            cout << "Line number exceeds number of lines in file" << endl;
+            std::cout << "Line number exceeds number of lines in file" << endl;
             return "";
         }
     }
@@ -386,7 +413,7 @@ string FileOperations::getLineContent(string filename, string contents, int line
     {
         if (line > getTransactionsLen())
         {
-            cout << "Line number exceeds number of lines in file" << endl;
+            std::cout << "Line number exceeds number of lines in file" << endl;
             return "";
         }
     }
@@ -417,7 +444,7 @@ void FileOperations::writeFileOverwriteLine(string filename, string content, int
     {
         if (line > getAccountsLen())
         {
-            cout << "Line number exceeds number of lines in file" << endl;
+            std::cout << "Line number exceeds number of lines in file" << endl;
             return;
         }
     }
@@ -425,7 +452,7 @@ void FileOperations::writeFileOverwriteLine(string filename, string content, int
     {
         if (line > getTransactionsLen())
         {
-            cout << "Line number exceeds number of lines in file" << endl;
+            std::cout << "Line number exceeds number of lines in file" << endl;
             return;
         }
     }
@@ -475,8 +502,13 @@ void Account::viewTransactions(int n) {
 
     if (count == 0)
     {
-        cout << "No transactions found" << endl;
+        std::cout << "No transactions found" << endl;
     }
+
+    //dont continue until user presses enter
+    std::cout << "Press enter to continue" << endl;
+    std::cin.ignore(); 
+    std::cin.get();
 }
 
 string FileOperations::encrypt(string contents)
@@ -608,7 +640,7 @@ Account getAccount(long int acc_no)
     itr = accounts.find(acc_no);
     if (itr == accounts.end())
     {
-        cout << "Account not found" << endl;
+        std::cout << "Account not found" << endl;
         return Account();
     }
     else
@@ -623,7 +655,7 @@ Transaction getTransaction(long int txn_no)
     itr = transactions.find(txn_no);
     if (itr == transactions.end())
     {
-        cout << "Transaction not found" << endl;
+        std::cout << "Transaction not found" << endl;
         return Transaction();
     }
     else
@@ -633,9 +665,12 @@ Transaction getTransaction(long int txn_no)
 }
 
 /// @brief Loads all accounts from the file into the accounts map
-void loadAllAccounts()
+void loadAllAccounts(bool load)
 {
-    cout << "Fetching accounts from file....." << endl;
+    // std::cout << "Fetching accounts from file....." << endl;
+    if (load) {
+        std::cout << "Fetching accounts from file....." << endl;
+    }
     int totAccounts = getAccountsLen();
     for (int i = 0; i < totAccounts; i++)
     {
@@ -646,47 +681,48 @@ void loadAllAccounts()
         string temp;
         getline(ss, temp, ',');
         acc_no = stol(temp);
-        // cout << acc_no << endl;
+        // std::cout << acc_no << endl;
         Account a;
         a.load_account(fileOps.getLineContent(ACCOUNT_FILE, fileOps.readFile(ACCOUNT_FILE), i + 1));
         accounts[acc_no] = a;
     }
 
-    cout << "Fetched " << accounts.size() << " accounts" << endl;
-    for (int i = 0; i < 1000000000; i++)
-    {
-    }; // for loop for delay
-    system("cls");
+    if (load) {
+        std::cout << "Fetched " << accounts.size() << " accounts" << endl;
+        for (int i = 0; i < 1000000000; i++){}; // for loop for delay
+        system("clear");
+    }
 }
 
-void loadAllTransactions(bool load = true)
+void loadAllTransactions(bool load)
 {
     if (load)
     {
-        cout << "Fetching transactions from file...." << endl;
+        std::cout << "Fetching transactions from file...." << endl;
     }
     //clear the map
     transactions.clear();
     int totTransactions = getTransactionsLen();
     for (int i = 0; i < totTransactions; i++)
     {
-        string line = fileOps.getLineContent(ACCOUNT_FILE, fileOps.readFile(ACCOUNT_FILE), i + 1);
-        // ONLY fetch account number to store in map
+        //load the transactions from file into the map
+        string line = fileOps.getLineContent(TXNS_FILE, fileOps.readFile(TXNS_FILE), i + 1);
+        // ONLY fetch transaction number to store in map
         stringstream ss(line);
         long int txn_no = 0;
         string temp;
         getline(ss, temp, ',');
         txn_no = stol(temp);
-        // cout << acc_no << endl;
+        // std::cout << txn_no << endl;
         Transaction t;
-        t.load_transaction(fileOps.getLineContent(TXNS_FILE, fileOps.readFile(TXNS_FILE), i + 1));
+        t.load_transaction(line);
         transactions[txn_no] = t;
     }
     if (load) {
-        cout << "Fetched " << transactions.size() << " transactions" << endl;
+        std::cout << "Fetched " << transactions.size() << " transactions" << endl;
         for (int i = 0; i < 1000000000; i++)
         {}; // for loop for delay
-        system("cls");
+        system("clear");
     }
 }
 
@@ -708,20 +744,20 @@ string get_current_time()
 
 int main()
 {
-    loadAllTransactions(); // load all transactions in the map
+    loadAllTransactions(true); // load all transactions in the map
     loadAllAccounts();     // load all accounts in the map
     MAIN_MENU:
     // start the main menu
-    cout << "Welcome to the bank" << endl;
-    // cout << "Enter your account number: ";
-    cout << "============================" << endl; // divider
-    cout << "What would you like to do?" << endl;
-    cout << "1. Create Account" << endl;
-    cout << "2. Login" << endl;
-    cout << "3. Exit" << endl;
-    cout << "============================" << endl; // divider
+    std::cout << "Welcome to the bank" << endl;
+    // std::cout << "Enter your account number: ";
+    std::cout << "============================" << endl; // divider
+    std::cout << "What would you like to do?" << endl;
+    std::cout << "1. Create Account" << endl;
+    std::cout << "2. Login" << endl;
+    std::cout << "3. Exit" << endl;
+    std::cout << "============================" << endl; // divider
     int c;
-    cin >> c;
+    std::cin >> c;
     Account acc;
 
     switch (c)
@@ -733,13 +769,13 @@ int main()
         goto MAIN_MENU;
         break;
     case 2:
-        cout << "Enter your account number: ";
+        std::cout << "Enter your account number: ";
         long int acc_no;
-        cin >> acc_no;
+        std::cin >> acc_no;
         acc = getAccount(acc_no);
         break;
     case 3:
-        cout << "Exiting...." << endl;
+        std::cout << "Exiting...." << endl;
         return 0;
     
     default:
@@ -754,26 +790,34 @@ int main()
     }
     else
     {
-        cout << "Account found" << endl;
+        std::cout << "Account found" << endl;
         acc.display_account();
     MENU:
-        cout << "============================" << endl; // divider
-        cout << "What would you like to do?" << endl;
-        cout << "1. Deposit" << endl;
-        cout << "2. Withdraw" << endl;
-        cout << "3. Transfer" << endl;
-        cout << "4. View Recent Transactions" << endl;
-        cout << "5. Edit Account Details" << endl;
-        cout << "6. Delete Account" << endl;
-        cout << "7. Exit" << endl;
-        cout << "Enter your choice: ";
+        loadAllAccounts();
+        loadAllTransactions();
+        acc = getAccount(acc.get_acc_no());
+        system("clear");
+        std::cout << "============================" << endl; // divider
+        std::cout << "What would you like to do?" << endl;
+        std::cout << "1. Deposit" << endl;
+        std::cout << "2. Withdraw" << endl;
+        std::cout << "3. Transfer" << endl;
+        std::cout << "4. View Recent Transactions" << endl;
+        std::cout << "5. Edit Account Details" << endl;
+        std::cout << "6. Delete Account" << endl;
+        std::cout << "7. See Account Details" << endl; // "See Account Details
+        std::cout << "8. Exit" << endl;
+        std::cout << "Enter your choice: ";
         int choice;
-        cin >> choice;
+        std::cin >> choice;
 
-        if (choice > 7 || choice < 1)
+        if (choice > 8 || choice < 1)
         {
-            cout << "Invalid choice" << endl;
-            system("cls");
+            std::cout << "Invalid choice" << endl;
+            std::cout << "Press any key to continue" << endl;
+            std::cin.ignore();
+            std::cin.get();
+            system("clear");
             goto MENU;
         }
 
@@ -783,51 +827,51 @@ int main()
         {
         case 1:
             float amount;
-            cout << "Enter amount to deposit: ";
-            cin >> amount;
+            std::cout << "Enter amount to deposit: ";
+            std::cin >> amount;
             tx.deposit(acc, amount);
             goto MENU;
             break;
         case 2:
-            cout << "Enter amount to withdraw: ";
-            cin >> amount;
+            std::cout << "Enter amount to withdraw: ";
+            std::cin >> amount;
             tx.withdraw(acc, amount);
             goto MENU;
             break;
         case 3:
             long int receiver_acc_no;
-            cout << "Enter receiver's account number: ";
-            cin >> receiver_acc_no;
+            std::cout << "Enter receiver's account number: ";
+            std::cin >> receiver_acc_no;
             //check if account exists
             if (getAccount(receiver_acc_no).get_acc_no() == 0)
             {
                 goto SUBMENU;
             }
-            cout << "Enter amount to transfer: ";
-            cin >> amount;
+            std::cout << "Enter amount to transfer: ";
+            std::cin >> amount;
             //check if amount is valid
             if (amount > acc.get_balance())
             {
-                cout << "Insufficient balance" << endl;
+                std::cout << "Insufficient balance" << endl;
                 goto SUBMENU;
             }
             if (amount <= 0)
             {
-                cout << "Invalid amount" << endl;
+                std::cout << "Invalid amount" << endl;
                 goto SUBMENU;
             }
             if (acc.get_acc_no() == receiver_acc_no)
             {
-                cout << "Cannot transfer to same account" << endl;
+                std::cout << "Cannot transfer to same account" << endl;
                 goto SUBMENU;
             }
             tx.transaction(acc, getAccount(receiver_acc_no), amount);
             goto MENU;
             break;
         case 4:
-            cout << "Enter number of transactions to view: ";
+            std::cout << "Enter number of transactions to view: ";
             int n;
-            cin >> n;
+            std::cin >> n;
             acc.viewTransactions(n);
             goto MENU;
             break;
@@ -836,13 +880,13 @@ int main()
             goto MENU;
             break;
         case 6:
-            cout << "Are you sure you want to delete your account? (y/n): ";
+            std::cout << "Are you sure you want to delete your account? (y/n): ";
             char ch;
-            cin >> ch;
+            std::cin >> ch;
             if (ch == 'y' || ch == 'Y')
             {
                 acc.delete_account();
-                cout << "Account deleted successfully" << endl;
+                std::cout << "Account deleted successfully" << endl;
                 return 0;
             }
             else
@@ -851,7 +895,11 @@ int main()
             }
             break;
         case 7:
-            cout << "Thank you for using our services" << endl;
+            acc.display_account();
+            goto MENU;
+            break;
+        case 8:
+            std::cout << "Thank you for using our services" << endl;
             return 0;
         default:
             break;
